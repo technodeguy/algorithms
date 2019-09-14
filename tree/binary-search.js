@@ -92,6 +92,46 @@ class BinarySearchTree {
     this.root = this.insertValue(this.root, value);
   }
 
+  removeMinValue(current) {
+    if (current === null) return null;
+
+    if (current.left === null) {
+      if (current.right === null) {
+        return null;
+      } else {
+        return current.right;
+      }
+    }
+
+    current.left = this.removeMinValue(current.left);
+
+    return current;
+  }
+
+  removeMaxValue(current) {
+    if (current === null) return null;
+
+    if (current.right === null) {
+      if (current.left === null) {
+        return null;
+      } else {
+        return current.left;
+      }
+    }
+
+    current.right = this.removeMaxValue(current.right);
+
+    return current;
+  }
+
+  removeMin() {
+    this.root = this.removeMinValue(this.root);
+  }
+
+  removeMax() {
+    this.root = this.removeMaxValue(this.root);
+  }
+
   removeDeepestLeft(current) {
     if (current === null) return null;
 
@@ -167,11 +207,16 @@ bstree.insert(160)
 //console.log(bstree.searchMax(bstree.root))
 
 
-bstree.remove(bstree.root, 100)
+// bstree.remove(bstree.root, 100)
 // bstree.remove(bstree.root, 999)
 // bstree.remove(bstree.root, 410)
 // bstree.remove(bstree.root, 400)
 // bstree.remove(bstree.root, 400)
+
+// bstree.removeMin();
+bstree.removeMax();
+bstree.removeMax();
+bstree.removeMax();
 
 // console.log(bstree.root)
 bstree.inorderTraversal(bstree.root)
