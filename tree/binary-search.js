@@ -173,6 +173,11 @@ class BinarySearchTree {
   deleteBinarySearchTree() {
     this.root = null;
   }
+
+  countNodes(current) {
+    if (current === null) return 0;
+    return this.countNodes(current.left) + this.countNodes(current.right) + 1;
+  }
 }
 
 const bstree = new BinarySearchTree();
@@ -214,9 +219,11 @@ bstree.insert(160)
 // bstree.remove(bstree.root, 400)
 
 // bstree.removeMin();
-bstree.removeMax();
-bstree.removeMax();
-bstree.removeMax();
+// bstree.removeMax();
+// bstree.removeMax();
+// bstree.removeMax();
 
 // console.log(bstree.root)
 bstree.inorderTraversal(bstree.root)
+
+console.log(bstree.countNodes(bstree.root))
