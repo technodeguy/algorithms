@@ -101,6 +101,130 @@ class AVLTree {
     if (value === undefined) return;
     this.root = this.insertValue(this.root, value);
   }
+
+  search(value) {
+    if (this.root === null) return null;
+
+    let current = this.root;
+
+    while (current.value !== value) {
+      if (current.value < value) {
+        if (current.right === null) {
+          return current.right;
+        } else {
+          current = current.right;
+        }
+      }
+
+      if (current.value > value) {
+        if (current.left === null) {
+          return current.left;
+        } else {
+          current = current.left;
+        }
+      }
+    }
+
+    return current;
+  }
+
+  searchMin() {
+    let current = this.root;
+
+    while (current.left !== null) {
+      current = current.left
+    }
+
+    return current;
+  }
+
+  searchMax() {
+    let current = this.root;
+
+    while (current.left !== null) {
+      current = current.right;
+    }
+
+    return current;
+  }
+
+  removeSuccessor(current) {
+    if (current === null) return null;
+
+    if (current.left === null && current.right === null) { // leaf
+      return null
+    } else if (current.left === null) {
+      return current.right;
+    } 
+
+    current.left = this.removeSuccessor(current.left);
+
+    return current;
+  }
+
+  removeValue(current, value) {
+    if (current === null) {
+      return null;
+    } else if (current.value > value) {
+      current.left  = this.remove(current.left, value);
+    } else if (current.value < value) {
+      current.right = this.remove(current.right, value);
+    } else if (current.value === value) {
+      if (current.left !== null && current.right !== null) {
+        const successor = this.searchMin(current.right);
+        current.value = successor.value;
+        current.right = this.removeSuccessor(current.right);
+      } else if (current.left !== null) {
+        current = current.left;
+      } else if (current.right !== null) {
+        current = current.right;
+      } else { 
+        current = null 
+      };
+    }
+
+    if (current === null) {
+      return null;
+    }
+
+    current.height = 1 + this.max(this.getHeight(current.left), this.getHeight(current.right)); 
+
+    const balanceFactor = this.getBalanceFactor(current);
+
+    if (balanceFactor > 1) {
+      if (this.getBalanceFactor(current.left) >= 0) {
+        return this.rotateRight(current); // left left
+      } else {
+        current.left = this.rotateLeft(current.left);
+        return this.rotateRight(current) // left right
+      }
+    }
+
+    if (balanceFactor < -1) {
+      if (this.getBalanceFactor(current.right) <= 0) {
+        return this.rotateLeft(current); // right right
+      } else {
+        current.right = this.rotateRight(current.right);
+        return this.rotateLeft(current); // right left
+      }
+    }
+
+    return current;
+  }
+
+  remove(value) {
+    this.removeValue(this.root, value);
+  } 
+
+  countNodes(current) {
+    if (current === null) return 0;
+
+    return 1 + this.countNodes(current.left) + this.countNodes(current.right);
+  }
+
+  clearAVLTree() {
+    this.root = null;
+  }
 }
 
 const avl = new AVLTree();
@@ -115,4 +239,10 @@ avl.insert(50)
 avl.insert(55)
 
 
-console.log(avl.root)
+// avl.remove(20)
+
+// console.log(avl.root)
+
+// console.log(avl.search(22))
+
+console.log(avl.countNodes(avl.root))
