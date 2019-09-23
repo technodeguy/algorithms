@@ -45,6 +45,7 @@ class AVLTree {
     current.left = leftRightChild;
 
     current.height = 1 + this.max(this.getHeight(current.left), this.getHeight(current.right));
+    leftChild.height = 1 + this.max(this.getHeight(leftChild.left), current.height);
 
     return leftChild;
   }
@@ -57,6 +58,7 @@ class AVLTree {
     current.right = rightLeftChild;
 
     current.height = 1 + this.max(this.getHeight(current.left), this.getHeight(current.right));
+    rightChild.height = 1 + this.max(current.height, this.getHeight(rightChild.right));
 
     return rightChild;
   }
@@ -148,6 +150,14 @@ class AVLTree {
     return current;
   }
 
+  searchSuccessor(current) {
+    while (current.left !== null) {
+      current = current.left
+    }
+
+    return current;
+  }
+
   removeSuccessor(current) {
     if (current === null) return null;
 
@@ -166,25 +176,21 @@ class AVLTree {
     if (current === null) {
       return null;
     } else if (current.value > value) {
-      current.left  = this.remove(current.left, value);
+      current.left = this.removeValue(current.left, value);
     } else if (current.value < value) {
-      current.right = this.remove(current.right, value);
+      current.right = this.removeValue(current.right, value);
     } else if (current.value === value) {
-      if (current.left !== null && current.right !== null) {
-        const successor = this.searchMin(current.right);
-        current.value = successor.value;
-        current.right = this.removeSuccessor(current.right);
-      } else if (current.left !== null) {
-        current = current.left;
-      } else if (current.right !== null) {
-        current = current.right;
-      } else { 
-        current = null 
+        if (current.left !== null && current.right !== null) {
+          const successor = this.searchSuccessor(current.right);
+          current.value = successor.value;
+          current.right = this.removeSuccessor(current.right);
+        } else if (current.left !== null) {
+          current = current.left;
+        } else if (current.right !== null) {
+          current = current.right;
+        } else { 
+          return null;
       };
-    }
-
-    if (current === null) {
-      return null;
     }
 
     current.height = 1 + this.max(this.getHeight(current.left), this.getHeight(current.right)); 
@@ -208,12 +214,12 @@ class AVLTree {
         return this.rotateLeft(current); // right left
       }
     }
-
+    
     return current;
   }
 
   remove(value) {
-    this.removeValue(this.root, value);
+    this.root = this.removeValue(this.root, value);
   } 
 
   countNodes(current) {
@@ -239,10 +245,19 @@ avl.insert(50)
 avl.insert(55)
 
 
-// avl.remove(20)
+avl.remove(10)
+avl.remove(20)
+avl.remove(22)
 
-// console.log(avl.root)
+avl.insert(99)
+avl.insert(101)
+// avl.remove(40)
+//avl.remove(10)
+
+console.log(avl.root)
 
 // console.log(avl.search(22))
 
-console.log(avl.countNodes(avl.root))
+// console.log(avl.countNodes(avl.root))
+
+// avl.inorderTraversal(avl.root)
