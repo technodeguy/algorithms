@@ -143,7 +143,7 @@ class AVLTree {
   searchMax() {
     let current = this.root;
 
-    while (current.left !== null) {
+    while (current.right !== null) {
       current = current.right;
     }
 
